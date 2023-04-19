@@ -21,9 +21,9 @@ resource "aws_subnet" "public" {
 resource "aws_subnet" "private" {
   count = length(var.private_cidr)
 
-  vpc_id = aws_vpc.main.id
-  cidr_block = var.private_cidr[count.index]
-  availability_zone = "${var.vpc_region}${count.index ==0 ? "a" : "b"}"
+  vpc_id            = aws_vpc.main.id
+  cidr_block        = var.private_cidr[count.index]
+  availability_zone = "${var.vpc_region}${count.index == 0 ? "a" : "b"}"
 
   tags = {
     Name = "${var.env_code}-private${count.index}"
@@ -41,11 +41,11 @@ resource "aws_internet_gateway" "main" {
 resource "aws_eip" "main" {
   count = length(var.private_cidr)
 
-  vpc      = true
+  vpc = true
 
   tags = {
     Name = "${var.env_code}-main${count.index}"
-  } 
+  }
 }
 
 resource "aws_nat_gateway" "main" {
@@ -78,7 +78,7 @@ resource "aws_route_table" "private" {
   vpc_id = aws_vpc.main.id
 
   route {
-    cidr_block = var.private_cidr[count.index]
+    cidr_block     = var.private_cidr[count.index]
     nat_gateway_id = aws_nat_gateway.main[count.index].id
   }
 
