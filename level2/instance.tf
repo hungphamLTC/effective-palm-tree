@@ -24,7 +24,7 @@ resource "aws_instance" "web_server" {
   instance_type               = var.instance_type
   key_name                    = var.key_name
   vpc_security_group_ids      = [aws_security_group.public.id]
-  subnet_id                   = aws_subnet.public[0].id
+  subnet_id                   = data.terraform_remote_state.level1.outputs.public_subnet[0]
   user_data                   = file("install_apache.sh")
 
   tags = {
@@ -34,7 +34,7 @@ resource "aws_instance" "web_server" {
 
 resource "aws_security_group" "public" {
   name   = "allow_traffic"
-  vpc_id = aws_vpc.main.id
+  vpc_id = data.terraform_remote_state.level1.outputs.vpc_id
 
   ingress {
     description = "SSH to VPC"
