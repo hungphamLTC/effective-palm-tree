@@ -8,7 +8,7 @@ terraform {
 
   backend "s3" {
     bucket = "terraform-state-7k17jz"
-    key    = "level1.tfstate"
+    key    = "level2.tfstate"
     region = "us-east-1"
     dynamodb_table = "terraform-state-locking"
   }
@@ -16,5 +16,5 @@ terraform {
 
 # Configure the AWS Provider
 provider "aws" {
-  region = var.vpc_region
+  region = data.terraform_remote_state.level1.outputs.vpc_region
 }
